@@ -2,6 +2,15 @@ package com.inha.dice_game.member;
 
 public class Member {
     private String id;
+
+    public String getPw() {
+        return pw;
+    }
+
+    public void setPw(String pw) {
+        this.pw = pw;
+    }
+
     private String pw;
     private String name;
     private int MMR;
@@ -9,6 +18,20 @@ public class Member {
     private String nickname;
     private int win;
     private int lose;
+
+
+    public Member(String id,String pw)
+    {
+        this.id = id;
+        this.pw = pw;
+        this.name = "0";
+        this.unique = 0;
+        this.nickname = "0";
+        this.MMR = 1000;
+        this.win = 0;
+        this.lose = 0;
+
+    }
 
     public Member(String id,String pw,String name,int unique,String nickname)
     {

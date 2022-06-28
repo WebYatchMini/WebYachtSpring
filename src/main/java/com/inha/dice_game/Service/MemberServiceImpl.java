@@ -3,9 +3,9 @@ package com.inha.dice_game.Service;
 import com.inha.dice_game.member.Member;
 import com.inha.dice_game.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class MemberServiceImpl implements MemberService {
 
 
@@ -26,8 +26,4 @@ public class MemberServiceImpl implements MemberService {
     public Member login(String id, String pw) {
         return memberRepository.login(id,pw);
     }
-
-    //@Override
-    //public void withdraw(Member member) {
-    //}
 }

@@ -9,6 +9,11 @@ public class MemMemberRepository implements MemberRepository {
 
     private static ArrayList<Member> store = new ArrayList<Member>();
 
+    public MemMemberRepository()
+    {
+        this.store.add(new Member("1","1","123",123,"mouse"));
+    }
+
     @Override
     public void join(Member member) {
         store.add(member);

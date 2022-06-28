@@ -1,7 +1,7 @@
-<<<<<<< HEAD
-# Webyatch
-webyatch spring project
-=======
-# WebYatchSpring
-Web Yatch Spring
->>>>>>> bee99555e1e3032dfeefd10e5d61559428d92aa0
+Web Yatch Spring Project
+
+how to build & run?
+
+1. goto the highest directory
+2. ./gradlew build
+3. java -jar build/libs/~~~.jar

@@ -8,40 +8,64 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Member {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "unique_id", nullable = false)
-    private Long uniqueID;
 
-    private String Id;
-    private String Pw;
-    private String name;
+    public String getUid() {
+        return uid;
+    }
+
+    public String getPw_hash() {
+        return pw_hash;
+    }
+
+    public int getMMR() {
+        return MMR;
+    }
+
+    public String getPw_hint() {
+        return pw_hint;
+    }
+
+    public String getHint_value_hash() {
+        return hint_value_hash;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public int getWin() {
+        return Win;
+    }
+
+    public int getLose() {
+        return Lose;
+    }
+
+    @Id
+    @Column(name = "u_id", nullable = false)
+    private String uid;
+
+    private String pw_hash;
     private int MMR;
+    private String pw_hint;
+    private String hint_value_hash;
     private String nickname;
     private int Win;
     private int Lose;
 
-    public Member(String id,String pw)
-    {
-        this.Id = id;
-        this.Pw = pw;
-        this.name = "0";
-        this.nickname = "0";
-        this.MMR = 1000;
-        this.Win = 0;
-        this.Lose = 0;
-
+    public Member() {
     }
 
+
     @Builder
-    public Member(String id,String pw,String name,int unique,String nickname)
+    public Member(String u_id,String pw_hint,String hint_value_hash,String pw_hash,String nickname)
     {
-        this.Id = id;
-        this.Pw = pw;
-        this.name = name;
+        this.uid = u_id;
+        this.pw_hash = pw_hash;
+        this.pw_hint = pw_hint;
+        this.hint_value_hash = hint_value_hash;
         this.nickname = nickname;
         this.MMR = 1000;
         this.Win = 0;

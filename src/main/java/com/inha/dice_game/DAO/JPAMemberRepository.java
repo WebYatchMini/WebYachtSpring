@@ -1,4 +1,4 @@
-package com.inha.dice_game.repository;
+package com.inha.dice_game.DAO;
 
 import com.inha.dice_game.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +11,10 @@ import java.util.List;
 @Repository
 public interface JPAMemberRepository extends JpaRepository<Member,Long> {
 
-    @Query("SELECT m FROM Member m WHERE m.Id = :id AND m.Pw = :pw")
-    List<Member> findByIdAndPw(@Param("id") String Id,@Param("pw") String Pw);
+    boolean existsByuid(String u_id);
+
+    boolean existsBynickname(String nickname);
+
+    @Query("SELECT m FROM Member m WHERE m.id =:id")
+    Member findByu_id(@Param("id")String id);
 }

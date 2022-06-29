@@ -1,42 +1,59 @@
 package com.inha.dice_game.controller;
 
+import lombok.Getter;
+
+import java.util.Objects;
+
+@Getter
 public class MemberVO {
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     private String id;
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
+    private String pw;
 
     @Override
     public String toString() {
         return "MemberVO{" +
                 "id='" + id + '\'' +
-                ", nickname='" + nickname + '\'' +
                 ", pw='" + pw + '\'' +
+                ", hint='" + hint + '\'' +
+                ", hint_answer='" + hint_answer + '\'' +
+                ", nickname='" + nickname + '\'' +
                 '}';
     }
 
+    private String hint;
+    private String hint_answer;
     private String nickname;
+
+    public String getId() {
+        return id;
+    }
 
     public String getPw() {
         return pw;
     }
 
-    public void setPw(String pw) {
-        this.pw = pw;
+    public String getHint() {
+        return hint;
     }
 
-    private String pw;
+    public String getHint_answer() {
+        return hint_answer;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MemberVO memberVO = (MemberVO) o;
+        return id.equals(memberVO.id) && pw.equals(memberVO.pw) && hint.equals(memberVO.hint) && hint_answer.equals(memberVO.hint_answer) && nickname.equals(memberVO.nickname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, pw, hint, hint_answer, nickname);
+    }
 }

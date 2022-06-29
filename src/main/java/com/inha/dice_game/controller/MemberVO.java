@@ -1,4 +1,4 @@
-package com.inha.dice_game.member.controller;
+package com.inha.dice_game.controller;
 
 public class MemberVO {
     public String getId() {

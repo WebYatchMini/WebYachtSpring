@@ -1,9 +1,11 @@
-package com.inha.dice_game.member.controller;
+package com.inha.dice_game.controller;
 
 import com.inha.dice_game.Service.MemberService;
-import com.inha.dice_game.member.Member;
+import com.inha.dice_game.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api")
@@ -33,9 +35,9 @@ public class MemberController {
         MemberVO returnVO = new MemberVO();
 
         System.out.println("id :"+memberVO.getId()+" PW: " + memberVO.getPw());
-        Member member = memberService.login(memberVO.getId(), memberVO.getPw());
+        List<Member> member = memberService.login(memberVO.getId(), memberVO.getPw());
         if(member != null)
-            returnVO.setNickname(member.getNickname());
+            returnVO.setNickname(member.get(0).getNickname());
         return returnVO;
     }
 }

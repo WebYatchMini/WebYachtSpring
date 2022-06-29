@@ -1,11 +1,13 @@
 package com.inha.dice_game.Service;
 
-import com.inha.dice_game.member.Member;
+import com.inha.dice_game.entity.Member;
+
+import java.util.List;
 
 public interface MemberService {
 
     void join(Member member);
-    Member login(String id,String pw);
+    List<Member> login(String id, String pw);
     //void withdraw(Member member);
 
 }

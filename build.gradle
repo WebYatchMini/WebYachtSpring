@@ -58,8 +58,8 @@ task installReact(type: Exec)
 	}
 	else
 	{
-		commandLine "npm","audit","fix"
-		commandLine "npm","install"
+		commandLine "nvm","audit","fix"
+		commandLine "nvm","install","14.15.3"
 	}
 }
 

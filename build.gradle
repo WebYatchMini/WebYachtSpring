@@ -17,7 +17,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.0'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.7.1'
 	implementation 'mysql:mysql-connector-java'
-	implementation 'com.moowork.gradle:gradle-node-plugin:1.2.0'
 	implementation 'org.springframework.boot:spring-boot-starter-security:2.7.0'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.0'
@@ -87,5 +86,5 @@ task copyReactBuildFiles(type: Copy)
 	into "$projectDir/src/main/resources/static"
 }
 
-copyReactBuildFiles.dependsOn(npmInstall)
+//copyReactBuildFiles.dependsOn(npmInstall)
 compileJava.dependsOn(copyReactBuildFiles)

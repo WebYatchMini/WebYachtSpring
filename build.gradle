@@ -1,12 +1,15 @@
 plugins {
 	id 'org.springframework.boot' version '2.7.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'com.github.node-gradle.node' version '3.4.0'
 	id 'java'
 }
 
 group = 'com.inha'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+
+apply plugin: 'com.github.node-gradle.node'
 
 repositories {
 	mavenCentral()
@@ -25,7 +28,10 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test:5.7.1'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket:2.7.0'
 }
-
+node{
+	download = true
+	version = "v14.15.3"
+}
 tasks.named('test') {
 	useJUnitPlatform()
 }

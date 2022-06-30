@@ -9,8 +9,6 @@ group = 'com.inha'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
-apply plugin: 'com.github.node-gradle.node'
-
 repositories {
 	mavenCentral()
 }
@@ -19,6 +17,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.0'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.7.1'
 	implementation 'mysql:mysql-connector-java'
+	implementation 'com.moowork.gradle:gradle-node-plugin:1.2.0'
 	implementation 'org.springframework.boot:spring-boot-starter-security:2.7.0'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.0'
@@ -30,7 +29,8 @@ dependencies {
 }
 node{
 	download = true
-	version = "v14.15.3"
+	version = "14.15.3"
+	nodeModulesDir = file("${projectDir}/src/main/resources/static")
 }
 tasks.named('test') {
 	useJUnitPlatform()
@@ -46,6 +46,7 @@ sourceSets{
 
 processResources {dependsOn "copyReactBuildFiles"}
 
+
 task installReact(type: Exec)
 {
 	workingDir "$frontendDir"
@@ -58,20 +59,12 @@ task installReact(type: Exec)
 	}
 	else
 	{
-		tasks.installRaud.execute()
+		commandLine "npm","audit","fix"
+		commandLine 'npm','install'
 	}
 }
 
-task installR(type: NpmTask) {
-	args = ['install']
-}
 
-task installRaud(type: NpmTask) {
-	args = ['audit','fix']
-	doLast {
-		tasks.installR.execute()
-	}
-}
 
 task buildReact(type: Exec) {
 	dependsOn "installReact"
@@ -81,14 +74,11 @@ task buildReact(type: Exec) {
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine "npm.cmd", "run-script", "build"
 	} else {
-		tasks.npmrun.execute()
+		commandLine "npm","run-script","build"
 	}
 }
 
-task npmrun(Type:NpmTask)
-{
-	args = ['run-script','build']
-}
+
 
 task copyReactBuildFiles(type: Copy)
 {
@@ -96,3 +86,6 @@ task copyReactBuildFiles(type: Copy)
 	from "$frontendDir/build"
 	into "$projectDir/src/main/resources/static"
 }
+
+copyReactBuildFiles.dependsOn(npmInstall)
+compileJava.dependsOn(copyReactBuildFiles)

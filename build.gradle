@@ -29,13 +29,14 @@ dependencies {
 node{
 	download = true
 	version = "14.15.3"
-	nodeModulesDir = file("${projectDir}/src/main/resources/static")
+	nodeProjectDir = file("${projectDir}/src/main/resources/static")
 }
 tasks.named('test') {
 	useJUnitPlatform()
 }
 
 def frontendDir = "$projectDir/src/main/frontend"
+def npmDir = "$projectDir/.gradle/nodejs/node-v14.15.3-linux-x64"
 
 sourceSets{
 	main{
@@ -60,8 +61,8 @@ task installReact(type: Exec)
 	else
 	{
 
-		commandLine "npm","install"
-		commandLine "npm","audit","fix"
+		commandLine "$npmDir/npm","install"
+		commandLine "$npmDir/npm","audit","fix"
 	}
 }
 
@@ -75,7 +76,7 @@ task buildReact(type: Exec) {
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine "npm.cmd", "run-script", "build"
 	} else {
-		commandLine "npm","run-script","build"
+		commandLine "$npmDir/npm","run-script","build"
 	}
 }
 

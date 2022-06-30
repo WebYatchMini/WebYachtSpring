@@ -58,8 +58,9 @@ task installReact(type: Exec)
 	}
 	else
 	{
-		commandLine "nvm","audit","fix"
-		commandLine "nvm","install","14.15.3"
+		System.out.println("$Path")
+		commandLine "npm","audit","fix"
+		commandLine "npm","install","14.15.3"
 	}
 }
 

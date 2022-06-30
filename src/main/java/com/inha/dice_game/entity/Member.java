@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Getter
+@NoArgsConstructor
 @Entity
 public class Member {
 
@@ -54,10 +55,6 @@ public class Member {
     private String nickname;
     private int Win;
     private int Lose;
-
-    public Member() {
-    }
-
 
     @Builder
     public Member(String u_id,String pw_hint,String hint_value_hash,String pw_hash,String nickname)

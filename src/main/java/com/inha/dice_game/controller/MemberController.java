@@ -1,5 +1,6 @@
 package com.inha.dice_game.controller;
 
+import com.inha.dice_game.DTO.LoginDTO;
 import com.inha.dice_game.Service.MemberService;
 import com.inha.dice_game.constants.SessionConstants;
 import com.inha.dice_game.entity.Member;
@@ -57,7 +58,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public String login(@RequestBody MemberVO memberVO, BindingResult bindingResult, HttpServletRequest request) throws Exception {
-        Member member = memberService.login(memberVO);
+        LoginDTO member = new LoginDTO(memberService.login(memberVO));
 
         if(member == null)
             return "login";

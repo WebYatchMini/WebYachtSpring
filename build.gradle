@@ -19,7 +19,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security:2.7.0'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.0'
-	implementation 'org.projectlombok:lombok:1.18.20'
+	implementation 'org.projectlombok:lombok:1.18.24'
 	//implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.0'
 	testImplementation 'org.springframework.security:spring-security-test:5.7.1'
@@ -52,7 +52,9 @@ task installReact(type: Exec)
 	}
 	else
 	{
-		commandLine "npm","audit", "fix" commandLine 'npm', 'install'
+		commandLine "npm","start"
+		commandLine "npm","audit", "fix"
+		commandLine 'npm', 'install'
 	}
 }
 

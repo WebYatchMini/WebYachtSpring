@@ -1,5 +1,6 @@
 package com.inha.dice_game.DTO;
 
+import com.inha.dice_game.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,21 @@ import lombok.Setter;
 @Setter
 public class LoginDTO {
     private String u_id;
-    private String pw;
-    private boolean useCookie;
+
+    public String getU_id() {
+        return u_id;
+    }
+
+    public void setU_id(String u_id) {
+        this.u_id = u_id;
+    }
+
+    public LoginDTO(String u_id) {
+        this.u_id = u_id;
+    }
+
+    public LoginDTO(Member member)
+    {
+        this.u_id = member.getUid();
+    }
 }

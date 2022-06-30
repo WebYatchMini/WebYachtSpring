@@ -58,9 +58,18 @@ task installReact(type: Exec)
 	}
 	else
 	{
-		commandLine "npm","start"
-		commandLine "npm","audit", "fix"
-		commandLine 'npm', 'install'
+		tasks.installRaud.execute()
+	}
+}
+
+task installR(type: NpmTask) {
+	args = ['install']
+}
+
+task installRaud(type: NpmTask) {
+	args = ['audit','fix']
+	doLast {
+		tasks.installR.execute()
 	}
 }
 
@@ -72,8 +81,13 @@ task buildReact(type: Exec) {
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine "npm.cmd", "run-script", "build"
 	} else {
-		commandLine "npm", "run-script", "build"
+		tasks.npmrun.execute()
 	}
+}
+
+task npmrun(Type:NpmTask)
+{
+	args = ['run-script','build']
 }
 
 task copyReactBuildFiles(type: Copy)

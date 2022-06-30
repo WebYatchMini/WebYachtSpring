@@ -59,7 +59,7 @@ task installReact(type: Exec)
 	else
 	{
 		commandLine "npm","audit","fix"
-		commandLine "$projectDir/.gradle/nodejs/npm",'install'
+		commandLine "npm","install"
 	}
 }
 

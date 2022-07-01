@@ -29,17 +29,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
-    {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/**").permitAll()
+                .antMatchers("/**").permitAll()
                 .and()
-                    .formLogin()
-                    .loginPage("/login").permitAll().and()
-                .logout().permitAll()
-                .logoutUrl("/logout").and()
                 .build();
     }
-
 }

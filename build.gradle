@@ -12,11 +12,6 @@ buildscript {
 	}
 }
 
-jar{
-	enabled = false
-}
-
-
 plugins {
 	id 'org.springframework.boot' version '2.7.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -44,6 +39,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.0'
 	testImplementation 'org.springframework.security:spring-security-test:5.7.1'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket:2.7.0'
+}
+
+jar{
+	enabled = false
 }
 
 tasks.named('test') {

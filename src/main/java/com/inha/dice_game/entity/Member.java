@@ -56,6 +56,8 @@ public class Member {
     private int Win;
     private int Lose;
 
+    public Member() {}
+
     @Builder
     public Member(String u_id,String pw_hint,String hint_value_hash,String pw_hash,String nickname)
     {

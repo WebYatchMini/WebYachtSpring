@@ -41,13 +41,13 @@ public class MemberController {
     }
 
     @PostMapping("/regist")
-    public void register(@RequestBody MemberVO memberVO)
+    public boolean register(@RequestBody MemberVO memberVO)
     {
         String encodedPW = passwordEncoder.encode(memberVO.getPw());
         String encodedANS = passwordEncoder.encode(memberVO.getHint_answer());
         Member member = new Member(memberVO.getId(), memberVO.getHint(), encodedANS,encodedPW, memberVO.getNickname());
 
-        memberService.join(member);
+        return memberService.join(member);
     }
 
     @GetMapping("/login")

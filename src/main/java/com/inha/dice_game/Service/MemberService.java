@@ -5,7 +5,7 @@ import com.inha.dice_game.entity.Member;
 
 public interface MemberService {
 
-    void join(Member member);
+    boolean join(Member member);
     Member login(MemberVO memberVO) throws Exception;
     boolean idCheck(String id);
     boolean nickCheck(String nickname);

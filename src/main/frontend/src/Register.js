@@ -59,7 +59,7 @@ class Register extends Component {
       alert("닉네임 중복확인을 해주세요")
     }
     else if (!this.passwordChk()) {
-      alert("비밀번호가 일치하지 않습니다");
+      alert("비밀번호가 일k치하지 않습니다");
     }
     else if (this.passwordChk() && this.state.id_dup && this.state.nick_dup) {
       let chk = window.confirm("이대로 가입하시겠습니까?");
@@ -78,7 +78,7 @@ class Register extends Component {
           hint_answer: this.state.hint_answer,
         })
       }).then(res => res.json())
-      .then(data => data.serverStatus === 2 ?
+      .then(data => data ?
         (() => {
           alert("회원가입이 완료되었습니다");
           window.location.href = '/login'

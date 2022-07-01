@@ -17,8 +17,12 @@ public class MemberServiceImpl implements MemberService {
     PasswordEncoder passwordEncoder;
 
     @Override
-    public void join(Member member) {
-        memberRepository.save(member);
+    public boolean join(Member member)
+    {
+        if(memberRepository.save(member) != null)
+            return true;
+        else
+            return false;
     }
 
     @Override

@@ -12,7 +12,9 @@ buildscript {
 	}
 }
 
-
+jar{
+	enabled = false
+}
 
 
 plugins {

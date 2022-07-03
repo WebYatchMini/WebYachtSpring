@@ -8,42 +8,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Member {
-
-    public String getUid() {
-        return uid;
-    }
-
-    public String getPw_hash() {
-        return pw_hash;
-    }
-
-    public int getMMR() {
-        return MMR;
-    }
-
-    public String getPw_hint() {
-        return pw_hint;
-    }
-
-    public String getHint_value_hash() {
-        return hint_value_hash;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public int getWin() {
-        return Win;
-    }
-
-    public int getLose() {
-        return Lose;
-    }
-
     @Id
     @Column(name = "u_id", nullable = false)
     private String uid;
@@ -55,8 +22,6 @@ public class Member {
     private String nickname;
     private int Win;
     private int Lose;
-
-    public Member() {}
 
     @Builder
     public Member(String u_id,String pw_hint,String hint_value_hash,String pw_hash,String nickname)

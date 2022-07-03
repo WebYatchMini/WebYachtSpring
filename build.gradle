@@ -23,6 +23,8 @@ group = 'com.inha'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+
+
 repositories {
 	mavenCentral()
 }
@@ -39,6 +41,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.0'
 	testImplementation 'org.springframework.security:spring-security-test:5.7.1'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket:2.7.0'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 }
 
 jar{
@@ -61,9 +65,8 @@ processResources {dependsOn "copyReactBuildFiles"}
 
 task installReact(type: Exec)
 {
-	System.out.println("$Path")
-	workingDir "$frontendDir"
-	inputs.dir "$frontendDir"
+	workingDir = "$frontendDir"
+	inputs.dir = "$frontendDir"
 	group = BasePlugin.BUILD_GROUP
 	if(System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows'))
 	{
@@ -78,9 +81,9 @@ task installReact(type: Exec)
 }
 
 task buildReact(type: Exec) {
-	dependsOn "installReact"
-	workingDir "$frontendDir"
-	inputs.dir "$frontendDir"
+	dependsOn = "installReact"
+	workingDir = "$frontendDir"
+	inputs.dir = "$frontendDir"
 	group = BasePlugin.BUILD_GROUP
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine "npm.cmd", "run-script", "build"

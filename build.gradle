@@ -65,8 +65,8 @@ processResources {dependsOn "copyReactBuildFiles"}
 
 task installReact(type: Exec)
 {
-	workingDir = "$frontendDir"
-	inputs.dir = "$frontendDir"
+	workingDir "$frontendDir"
+	inputs.dir "$frontendDir"
 	group = BasePlugin.BUILD_GROUP
 	if(System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows'))
 	{
@@ -81,9 +81,9 @@ task installReact(type: Exec)
 }
 
 task buildReact(type: Exec) {
-	dependsOn = "installReact"
-	workingDir = "$frontendDir"
-	inputs.dir = "$frontendDir"
+	dependsOn "installReact"
+	workingDir "$frontendDir"
+	inputs.dir "$frontendDir"
 	group = BasePlugin.BUILD_GROUP
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine "npm.cmd", "run-script", "build"

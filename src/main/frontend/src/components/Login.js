@@ -35,6 +35,7 @@ handleLogin = () => {
     fetch('/api/login/', requstOption)
       .then(res => res.json())
       .then(data => {
+        console.log(data[0].status);
         if (data.status) {
           setStoreLoginTrue();
           setStoreUid(data.uid);

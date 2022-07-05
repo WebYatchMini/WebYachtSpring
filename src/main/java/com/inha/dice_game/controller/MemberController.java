@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 
 @RestController
 @RequestMapping("api")
@@ -70,14 +71,12 @@ public class MemberController {
         return profileDTO;
     }
 
-    @PostMapping("/logout")
-    public String logout(HttpServletRequest httpServletRequest)
+    @GetMapping("/logout")
+    public void logout(HttpServletRequest httpServletRequest)
     {
         HttpSession session = httpServletRequest.getSession(false);
-        if(session != null)
+          if(session != null)
             session.invalidate();
-
-        return "redirect:/index.html";
     }
 
 }

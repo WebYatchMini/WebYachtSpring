@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 public class Member {
     @Id
-    @Column(name = "u_id", nullable = false)
+    @Column(name = "uid", nullable = false)
     private String uid;
 
     private String pw_hash;
@@ -22,6 +22,20 @@ public class Member {
     private String nickname;
     private int Win;
     private int Lose;
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "uid='" + uid + '\'' +
+                ", pw_hash='" + pw_hash + '\'' +
+                ", MMR=" + MMR +
+                ", pw_hint='" + pw_hint + '\'' +
+                ", hint_value_hash='" + hint_value_hash + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", Win=" + Win +
+                ", Lose=" + Lose +
+                '}';
+    }
 
     @Builder
     public Member(String u_id,String pw_hint,String hint_value_hash,String pw_hash,String nickname)

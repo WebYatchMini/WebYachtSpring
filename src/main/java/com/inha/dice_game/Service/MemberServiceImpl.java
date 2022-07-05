@@ -1,6 +1,6 @@
 package com.inha.dice_game.Service;
 
-import com.inha.dice_game.controller.MemberVO;
+import com.inha.dice_game.DTO.LoginVO;
 import com.inha.dice_game.entity.Member;
 import com.inha.dice_game.DAO.JPAMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +26,17 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member login(MemberVO memberVO) throws Exception {
-        Member temp = memberRepository.findByu_id(memberVO.getId());
+    public Member login(LoginVO loginVO) throws Exception {
+        System.out.println(loginVO.toString());
+        System.out.println(loginVO.getId());
+        System.out.println(loginVO.getPw());
+        System.out.println(memberRepository.findByuid(loginVO.getId()).toString());
+        Member temp = memberRepository.findByuid(loginVO.getId());
 
-        if(temp == null)
+        if(temp == null) {
             return null;
-        if(!passwordEncoder.matches(temp.getPw_hash(),memberVO.getPw()))
+        }
+        if(!passwordEncoder.matches(loginVO.getPw(),temp.getPw_hash()))
             return null;
 
         return temp;

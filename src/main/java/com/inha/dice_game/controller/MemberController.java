@@ -1,6 +1,8 @@
 package com.inha.dice_game.controller;
 
 import com.inha.dice_game.DTO.LoginDTO;
+import com.inha.dice_game.DTO.LoginVO;
+import com.inha.dice_game.DTO.MemberVO;
 import com.inha.dice_game.Service.MemberService;
 import com.inha.dice_game.constants.SessionConstants;
 import com.inha.dice_game.entity.Member;
@@ -9,9 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -57,11 +57,11 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody MemberVO memberVO, BindingResult bindingResult, HttpServletRequest request) throws Exception {
-        LoginDTO member = new LoginDTO(memberService.login(memberVO));
+    public String login(@RequestBody LoginVO loginVO, BindingResult bindingResult, HttpServletRequest request) throws Exception {
+        LoginDTO member = new LoginDTO(memberService.login(loginVO));
 
         if(member == null)
-            return "login";
+            return "redirect:/index.html";
 
         HttpSession session = request.getSession();
         session.setAttribute(SessionConstants.Login_member,member);

@@ -1,4 +1,4 @@
-package com.inha.dice_game.controller;
+package com.inha.dice_game.DTO;
 
 import lombok.Getter;
 
@@ -23,26 +23,6 @@ public class MemberVO {
     private String hint;
     private String hint_answer;
     private String nickname;
-
-    public String getId() {
-        return id;
-    }
-
-    public String getPw() {
-        return pw;
-    }
-
-    public String getHint() {
-        return hint;
-    }
-
-    public String getHint_answer() {
-        return hint_answer;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
 
     @Override
     public boolean equals(Object o) {

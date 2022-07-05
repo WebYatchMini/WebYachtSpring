@@ -1,6 +1,7 @@
 package com.inha.dice_game.Service;
 
 import com.inha.dice_game.DTO.LoginVO;
+import com.inha.dice_game.DTO.ProfileDTO;
 import com.inha.dice_game.entity.Member;
 import com.inha.dice_game.DAO.JPAMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,29 +18,32 @@ public class MemberServiceImpl implements MemberService {
     PasswordEncoder passwordEncoder;
 
     @Override
-    public boolean join(Member member)
+    public boolean join(Member member) throws Exception
     {
-        if(memberRepository.save(member) != null)
-            return true;
-        else
+        try {
+            memberRepository.save(member);
+        }
+        catch(Exception e)
+        {
             return false;
+        }
+        return true;
     }
 
     @Override
-    public Member login(LoginVO loginVO) throws Exception {
-        System.out.println(loginVO.toString());
-        System.out.println(loginVO.getId());
-        System.out.println(loginVO.getPw());
-        System.out.println(memberRepository.findByuid(loginVO.getId()).toString());
+    public ProfileDTO login(LoginVO loginVO) throws Exception {
         Member temp = memberRepository.findByuid(loginVO.getId());
 
-        if(temp == null) {
-            return null;
+        if(temp == null)
+        {
+            temp = new Member(null,null,null,null,null);
         }
-        if(!passwordEncoder.matches(loginVO.getPw(),temp.getPw_hash()))
-            return null;
+        ProfileDTO profileDTO = new ProfileDTO(temp,true);
 
-        return temp;
+        if(temp.getPw_hash() == null || !passwordEncoder.matches(loginVO.getPw(),temp.getPw_hash())) {
+            profileDTO.nullify();
+        }
+        return profileDTO;
     }
 
     @Override

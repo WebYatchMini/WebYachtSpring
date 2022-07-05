@@ -15,6 +15,5 @@ public interface JPAMemberRepository extends JpaRepository<Member,Long> {
 
     boolean existsBynickname(String nickname);
 
-    @Query("SELECT m FROM Member m WHERE m.id =:id")
-    Member findByu_id(@Param("id")String id);
+    Member findByuid(String id);
 }

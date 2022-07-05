@@ -35,19 +35,20 @@ handleLogin = () => {
     fetch('/api/login/', requstOption)
       .then(res => res.json())
       .then(data => {
-        console.log(data[0].status);
-        if (data.status) {
-          setStoreLoginTrue();
-          setStoreUid(data.uid);
-          setStoreNickname(data.nickname);
-          setStoreMmr(data.mmr);
-          setStoreWin(data.win);
-          setStoreLose(data.lose);
-          window.location.href = '/';
-        }
-        else {
-          alert('아이디 혹은 비밀번호를 다시 확인해주세요');
-        }
+        console.log(data[0].status)
+        console.log(data.status)
+        // if (data.status) {
+        //   setStoreLoginTrue();
+        //   setStoreUid(data.uid);
+        //   setStoreNickname(data.nickname);
+        //   setStoreMmr(data.mmr);
+        //   setStoreWin(data.win);
+        //   setStoreLose(data.lose);
+        //   window.location.href = '/';
+        // }
+        // else {
+        //   alert('아이디 혹은 비밀번호를 다시 확인해주세요');
+        // }
       });
   }
 

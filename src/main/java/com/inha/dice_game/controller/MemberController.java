@@ -1,14 +1,12 @@
 package com.inha.dice_game.controller;
 
-import com.inha.dice_game.DTO.LoginDTO;
 import com.inha.dice_game.DTO.LoginVO;
 import com.inha.dice_game.DTO.MemberVO;
 import com.inha.dice_game.DTO.ProfileDTO;
-import com.inha.dice_game.Service.MemberService;
+import com.inha.dice_game.Service.Member.MemberService;
 import com.inha.dice_game.constants.SessionConstants;
 import com.inha.dice_game.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;

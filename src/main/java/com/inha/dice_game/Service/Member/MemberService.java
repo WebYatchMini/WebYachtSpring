@@ -1,4 +1,4 @@
-package com.inha.dice_game.Service;
+package com.inha.dice_game.Service.Member;
 
 import com.inha.dice_game.DTO.LoginVO;
 import com.inha.dice_game.DTO.ProfileDTO;

@@ -1,12 +1,14 @@
 package com.inha.dice_game.Service.Game;
 
 import com.inha.dice_game.DTO.GameDTO;
+import com.inha.dice_game.DTO.GameInfoVO;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class GameListServiceImpl implements GameListService {
 
@@ -25,8 +27,13 @@ public class GameListServiceImpl implements GameListService {
     }
 
     @Override
-    public HashMap<String, GameDTO> fetchRooms() {
-        return GameRoomList;
+    public ArrayList<GameInfoVO> fetchRooms() {
+        ArrayList<GameInfoVO> returnArray = new ArrayList<>(GameRoomList.size());
+        for(GameDTO gameDTO : GameRoomList.values())
+        {
+            returnArray.add(gameDTO.extractInfo());
+        }
+        return returnArray;
     }
 
     @Override

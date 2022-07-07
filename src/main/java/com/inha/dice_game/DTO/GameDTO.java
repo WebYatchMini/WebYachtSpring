@@ -17,8 +17,7 @@ public class GameDTO {
     private boolean isFull;
     private int curPlayerCount;
 
-    public GameDTO(String roomCode, String title, String roomPwd, String organizerName) {
-        this.roomCode = roomCode;
+    public GameDTO(String title, String roomPwd, String organizerName) {
         this.title = title;
         if(roomPwd != null) {
             this.roomPwd = roomPwd;
@@ -28,5 +27,10 @@ public class GameDTO {
         this.isStarted = false;
         this.isFull = false;
         this.curPlayerCount = 1;
+    }
+
+    public GameInfoVO extractInfo()
+    {
+        return new GameInfoVO(this);
     }
 }

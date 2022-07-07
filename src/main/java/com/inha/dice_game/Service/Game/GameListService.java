@@ -1,6 +1,7 @@
 package com.inha.dice_game.Service.Game;
 
 import com.inha.dice_game.DTO.GameDTO;
+import com.inha.dice_game.DTO.GameInfoVO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 public interface GameListService {
 
     ArrayList<Integer> RollDice(ArrayList<Integer> dices, ArrayList<Integer> whichToRoll);
-    HashMap<String, GameDTO> fetchRooms();
+    ArrayList<GameInfoVO> fetchRooms();
     boolean deleteRoom(String roomCode);
     boolean makeNewRoom(GameDTO gameDTO);
 }

@@ -55,6 +55,7 @@ tasks.named('test') {
 }
 
 def frontendDir = "$projectDir/src/main/frontend"
+def frontendSourceDir = "$projectDir/src/main/frontendSource"
 
 sourceSets{
 	main{
@@ -64,8 +65,17 @@ sourceSets{
 
 processResources {dependsOn "copyReactBuildFiles"}
 
+task copySource(type: Copy)
+{
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		from "$frontendSourceDir"
+		into "$frontendDir"
+	}
+}
+
 task installReact(type: Exec)
 {
+	dependsOn "copySource"
 	workingDir "$frontendDir"
 	inputs.dir "$frontendDir"
 	group = BasePlugin.BUILD_GROUP

@@ -4,7 +4,6 @@ import com.inha.dice_game.DTO.GameDTO;
 import com.inha.dice_game.DTO.GameInfoVO;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public interface GameListService {

@@ -6,14 +6,13 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class GameListServiceImpl implements GameListService {
 
     @Autowired
-    HashMap<String, GameDTO> GameRoomList;
+    LinkedHashMap<String, GameDTO> GameRoomList;
 
     @Autowired
     Random randomGenerator;

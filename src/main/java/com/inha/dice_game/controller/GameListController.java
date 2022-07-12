@@ -3,8 +3,9 @@ package com.inha.dice_game.controller;
 
 import com.inha.dice_game.DTO.GameDTO;
 import com.inha.dice_game.DTO.GameInfoVO;
+import com.inha.dice_game.DTO.GameJoinDTO;
 import com.inha.dice_game.DTO.ProfileDTO;
-import com.inha.dice_game.Service.Game.GameListService;
+import com.inha.dice_game.Service.Game.GameInfoService;
 import com.inha.dice_game.constants.SessionConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,10 +19,10 @@ import java.util.ArrayList;
 public class GameListController {
 
     private final PasswordEncoder passwordEncoder;
-    private final GameListService gameListService;
+    private final GameInfoService gameListService;
 
     @Autowired
-    public GameListController(GameListService gameListService, PasswordEncoder passwordEncoder)
+    public GameListController(GameInfoService gameListService, PasswordEncoder passwordEncoder)
     {
         this.gameListService = gameListService;
         this.passwordEncoder = passwordEncoder;
@@ -52,5 +53,17 @@ public class GameListController {
         ProfileDTO temp = (ProfileDTO)session.getAttribute(SessionConstants.Login_member);
         gameDTO.setOrganizerName(temp.getNickname());
         return gameListService.makeNewRoom(gameDTO);
+    }
+
+    @PostMapping("/join")
+    public boolean join(@RequestBody GameJoinDTO gameJoinDTO)
+    {
+        return gameListService.joinRoom(gameJoinDTO);
+    }
+
+    @PostMapping("/exit")
+    public void exit(@RequestBody String roomCode)
+    {
+        gameListService.exitRoom(roomCode);
     }
 }

@@ -3,6 +3,7 @@ package com.inha.dice_game.Service.Game;
 import com.inha.dice_game.DTO.GameDTO;
 import com.inha.dice_game.DTO.GameInfoVO;
 import com.inha.dice_game.DTO.GameJoinDTO;
+import com.inha.dice_game.DTO.GameActionResultDTO;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,8 +28,6 @@ public class GameInfoServiceImpl implements GameInfoService {
     @Autowired
     Random randomGenerator;
 
-    @Autowired
-    GameChatService gameChatService;
 
     @Override
     public ArrayList<Integer> RollDice(ArrayList<Integer> dices, ArrayList<Integer> whichToRoll) {
@@ -54,12 +53,17 @@ public class GameInfoServiceImpl implements GameInfoService {
     }
 
     @Override
-    public boolean makeNewRoom(GameDTO gameDTO) {
+    public GameActionResultDTO makeNewRoom(GameDTO gameDTO) {
         String roomCode;
+        GameActionResultDTO resultDTO = new GameActionResultDTO();
         int retryLimit = -1;
         do {
             if(retryLimit > 3)
-                return false;
+            {
+                resultDTO.setResult(false);
+                resultDTO.setRoomCode(null);
+                return resultDTO;
+            }
             roomCode = RandomStringUtils.randomAlphanumeric(6).toUpperCase();//설마 겹칠까?
             retryLimit++;
         }while(GameInfoList.get(roomCode) != null);
@@ -67,23 +71,28 @@ public class GameInfoServiceImpl implements GameInfoService {
         gameDTO.setRoomCode(roomCode);
         GameInfoList.put(roomCode,gameDTO);
 
-        gameChatService.createChatRoomDTO(roomCode);
-        return true;
+        resultDTO.setResult(true);
+        resultDTO.setRoomCode(roomCode);
+        return resultDTO;
     }
 
     @Override
-    public boolean joinRoom(GameJoinDTO gameJoinDTO) {
+    public GameActionResultDTO joinRoom(GameJoinDTO gameJoinDTO) {
         GameDTO temp = GameInfoList.get(gameJoinDTO.getRoomCode());
-        if(temp.isLocked() && !passwordEncoder.matches(gameJoinDTO.getRoomPwd(),temp.getRoomPwd()))
-            return false;
-        if(temp.isFull())
-            return false;
+        GameActionResultDTO resultDTO = new GameActionResultDTO();
+        if((temp.isLocked() && !passwordEncoder.matches(gameJoinDTO.getRoomPwd(),temp.getRoomPwd())|| temp.isFull()))
+        {
+            resultDTO.setResult(false);
+            resultDTO.setRoomCode(null);
+            return resultDTO;
+        }
 
         temp.setCurPlayerCount(temp.getCurPlayerCount() + 1);
         temp.setFull(true);
         GameInfoList.replace(gameJoinDTO.getRoomCode(),temp);
-
-        return true;
+        resultDTO.setRoomCode(gameJoinDTO.getRoomCode());
+        resultDTO.setResult(true);
+        return resultDTO;
     }
 
     @Override

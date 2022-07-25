@@ -1,10 +1,7 @@
 package com.inha.dice_game.controller;
 
 
-import com.inha.dice_game.DTO.GameDTO;
-import com.inha.dice_game.DTO.GameInfoVO;
-import com.inha.dice_game.DTO.GameJoinDTO;
-import com.inha.dice_game.DTO.ProfileDTO;
+import com.inha.dice_game.DTO.*;
 import com.inha.dice_game.Service.Game.GameInfoService;
 import com.inha.dice_game.constants.SessionConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +38,7 @@ public class GameListController {
     }
 
     @PostMapping("/make")
-    public boolean make(@RequestBody GameDTO gameDTO, HttpServletRequest httpServletRequest)
+    public GameActionResultDTO make(@RequestBody GameDTO gameDTO, HttpServletRequest httpServletRequest)
     {
         String encodedPW;
         if(gameDTO.getRoomPwd() != null)
@@ -56,7 +53,7 @@ public class GameListController {
     }
 
     @PostMapping("/join")
-    public boolean join(@RequestBody GameJoinDTO gameJoinDTO)
+    public GameActionResultDTO join(@RequestBody GameJoinDTO gameJoinDTO)
     {
         return gameListService.joinRoom(gameJoinDTO);
     }

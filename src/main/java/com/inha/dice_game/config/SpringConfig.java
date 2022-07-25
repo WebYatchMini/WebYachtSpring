@@ -2,15 +2,16 @@ package com.inha.dice_game.config;
 
 import com.inha.dice_game.DTO.ChatRoomDTO;
 import com.inha.dice_game.DTO.GameDTO;
-import com.inha.dice_game.Service.Game.GameChatService;
-import com.inha.dice_game.Service.Game.GameChatServiceImpl;
 import com.inha.dice_game.Service.Game.GameInfoService;
 import com.inha.dice_game.Service.Game.GameInfoServiceImpl;
 import com.inha.dice_game.Service.Member.MemberService;
 import com.inha.dice_game.Service.Member.MemberServiceImpl;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.config.WebSocketMessageBrokerStats;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -43,5 +44,21 @@ public class SpringConfig {
     }
 
     @Bean
-    public GameChatService gameChatService(){return new GameChatServiceImpl();}
+    public BeanPostProcessor beanPostProcessor() {
+        return new BeanPostProcessor() {
+            @Override
+            public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+                if (bean instanceof WebSocketMessageBrokerStats) {
+                    WebSocketMessageBrokerStats webSocketMessageBrokerStats = (WebSocketMessageBrokerStats) bean;
+                    webSocketMessageBrokerStats.setLoggingPeriod(5 * 1000); // your customization
+                }
+                return bean;
+            }
+
+            @Override
+            public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+                return bean;
+            }
+        };
+    }
 }

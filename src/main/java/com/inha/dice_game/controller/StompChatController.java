@@ -12,16 +12,10 @@ public class StompChatController {
 
     private final SimpMessagingTemplate template;
 
-    @MessageMapping("/chat/enter")
-    public void enter(ChatMessageDTO message)
-    {
-        message.setMessage("["+message.getSender() + "]님이 참가하였습니다.");
-        template.convertAndSend("/sub/chat/room/" + message.getRoomCode(),message);
-    }
-
     @MessageMapping("/chat/message")
     public void message(ChatMessageDTO message)
     {
+        System.out.println("received message : " + message.getMessage());
         template.convertAndSend("/sub/chat/room/" + message.getRoomCode(),message);
     }
 }

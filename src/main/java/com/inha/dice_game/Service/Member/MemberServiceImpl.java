@@ -1,9 +1,8 @@
 package com.inha.dice_game.Service.Member;
 
-import com.inha.dice_game.DTO.LoginVO;
-import com.inha.dice_game.DTO.ProfileDTO;
-import com.inha.dice_game.entity.Member;
 import com.inha.dice_game.DAO.JPAMemberRepository;
+import com.inha.dice_game.DTO.Member.MemberDTOCollection;
+import com.inha.dice_game.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,14 +30,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public ProfileDTO login(LoginVO loginVO) throws Exception {
+    public MemberDTOCollection.Profile login(MemberDTOCollection.LoginVO loginVO) throws Exception {
         Member temp = memberRepository.findByuid(loginVO.getId());
 
         if(temp == null)
         {
             temp = new Member(null,null,null,null,null);
         }
-        ProfileDTO profileDTO = new ProfileDTO(temp,true);
+        MemberDTOCollection.Profile profileDTO = new MemberDTOCollection.Profile(temp,true);
 
         if(temp.getPw_hash() == null || !passwordEncoder.matches(loginVO.getPw(),temp.getPw_hash())) {
             profileDTO.nullify();

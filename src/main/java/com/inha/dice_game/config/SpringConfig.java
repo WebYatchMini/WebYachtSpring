@@ -1,7 +1,6 @@
 package com.inha.dice_game.config;
 
-import com.inha.dice_game.DTO.ChatRoomDTO;
-import com.inha.dice_game.DTO.GameDTO;
+import com.inha.dice_game.DTO.Game.GameDTOCollection;
 import com.inha.dice_game.Service.Game.GameInfoService;
 import com.inha.dice_game.Service.Game.GameInfoServiceImpl;
 import com.inha.dice_game.Service.Member.MemberService;
@@ -30,18 +29,18 @@ public class SpringConfig {
     public GameInfoService gameService(){return new GameInfoServiceImpl();}
 
     @Bean
-    public HashMap<String, ChatRoomDTO> chatRoomDTOHashMap() {return new HashMap<>();}
-
-    @Bean
     public Random randomGenerator(){return new Random();}
 
     @Bean
     public HashMap<String, WebSocketSession> GameRoomList() {return new HashMap<>();}
 
     @Bean
-    public LinkedHashMap<String, GameDTO> GameInfoList(){
+    public LinkedHashMap<String, GameDTOCollection.Game> GameInfoList(){
         return new LinkedHashMap<>();
     }
+
+    @Bean
+    public HashMap<String, GameDTOCollection.Progress> GameProgressList(){return new HashMap<>();}
 
     @Bean
     public BeanPostProcessor beanPostProcessor() {

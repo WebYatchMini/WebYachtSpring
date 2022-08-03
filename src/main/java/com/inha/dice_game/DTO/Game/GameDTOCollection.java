@@ -1,9 +1,13 @@
 package com.inha.dice_game.DTO.Game;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Random;
 
 public class GameDTOCollection {
 
@@ -57,27 +61,81 @@ public class GameDTOCollection {
     public static class Progress {
         private int turn;
 
-        private ArrayList<Integer> p1Dices;
-        private ArrayList<Integer> p2Dices;
+        private ArrayList<Integer> Dices;
+        private LinkedHashMap<String,Integer> PickAvailability;
+        private ArrayList<ArrayList<Integer>> Pick;
+        @JsonIgnore
+        private int p1Sum;
+        @JsonIgnore
+        private int p2Sum;
+        private int isOwnersTurn;
 
-        private ArrayList<Integer> p1Skills;
-        private ArrayList<Integer> p2Skills;
+        private int sum;
 
-        private ArrayList<Boolean> p1PickAvailability;
-        private ArrayList<Boolean> p2PickAvailability;
+        @JsonIgnore
+        private Random random;
 
         public Progress()
         {
             this.turn = 0;
-            this.p1Dices = new ArrayList<>();
-            this.p2Dices = new ArrayList<>();
-            this.p1Skills = new ArrayList<>();
-            this.p2Skills = new ArrayList<>();
-
-            this.p1PickAvailability = new ArrayList<>();
-            this.p2PickAvailability = new ArrayList<>();
-
+            this.Dices = new ArrayList<>(Arrays.asList(0,0,0,0,0));
+            this.PickAvailability = new LinkedHashMap<>();
+            initPickAvail();
+            this.Pick = new ArrayList<>(2);
+            this.Pick.add(new ArrayList<>(14));
+            this.Pick.add(new ArrayList<>(14));
+            this.p1Sum = 0;
+            this.p2Sum = 0;
+            this.random = new Random();
         }
+
+        public void initPickAvail()
+        {
+            this.PickAvailability.put("Ones",0);
+            this.PickAvailability.put("Twos",0);
+            this.PickAvailability.put("Threes",0);
+            this.PickAvailability.put("Fours",0);
+            this.PickAvailability.put("Fives",0);
+            this.PickAvailability.put("Sixes",0);
+            this.PickAvailability.put("Bonus",0);
+            this.PickAvailability.put("Choice",0);
+            this.PickAvailability.put("3 of a kind",0);
+            this.PickAvailability.put("4 of a kind",0);
+            this.PickAvailability.put("Full House",0);
+            this.PickAvailability.put("S.Straight",0);
+            this.PickAvailability.put("L.Straight",0);
+            this.PickAvailability.put("Yacht",0);
+        }
+
+
+
+        public void setSeed(long seed)
+        {
+            this.random.setSeed(seed);
+        }
+
+        public Integer nextInt(Integer bound)
+        {
+            return random.nextInt(bound);
+        }
+
+    }
+
+    @Getter
+    @Setter
+    public static class picked
+    {
+        private String roomCode;
+        private ArrayList<Boolean> picked;
+    }
+
+    @Getter
+    @Setter
+    public static class reRoll
+    {
+        private ArrayList<Integer> keep;
+        private int rollAmount;
+        private String roomCode;
     }
 
     @Getter

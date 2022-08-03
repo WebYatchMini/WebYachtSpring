@@ -3,6 +3,7 @@ package com.inha.dice_game.controller;
 import com.inha.dice_game.DTO.Chat.ChatDTOCollection;
 import com.inha.dice_game.DTO.Game.GameDTOCollection;
 import com.inha.dice_game.Service.Game.GameInfoService;
+import com.inha.dice_game.Service.Game.InGameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -19,6 +20,9 @@ public class PreGameController {
 
     @Autowired
     private final GameInfoService gameInfoService;
+
+    @Autowired
+    private final InGameService inGameService;
 
     @MessageMapping("/pregame/room/readyState")
     public void readyState(GameDTOCollection.ReadyState gameReadyStateDTO)
@@ -41,5 +45,6 @@ public class PreGameController {
         System.out.println("received start : " + gameStartDTO.getRoomCode());
         gameStartDTO.setType(2);
         simpMessagingTemplate.convertAndSend("/sub/pregame/room/"+gameStartDTO.getRoomCode(),gameStartDTO);
+        inGameService.Init(gameStartDTO.getRoomCode());
     }
 }

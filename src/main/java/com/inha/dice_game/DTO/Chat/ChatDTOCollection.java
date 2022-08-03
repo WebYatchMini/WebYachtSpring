@@ -12,5 +12,4 @@ public class ChatDTOCollection {
         private int sender;
         private String message;
     }
-
 }

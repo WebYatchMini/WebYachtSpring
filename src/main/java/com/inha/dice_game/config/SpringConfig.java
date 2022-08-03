@@ -3,8 +3,11 @@ package com.inha.dice_game.config;
 import com.inha.dice_game.DTO.Game.GameDTOCollection;
 import com.inha.dice_game.Service.Game.GameInfoService;
 import com.inha.dice_game.Service.Game.GameInfoServiceImpl;
+import com.inha.dice_game.Service.Game.InGameService;
+import com.inha.dice_game.Service.Game.InGameServiceImpl;
 import com.inha.dice_game.Service.Member.MemberService;
 import com.inha.dice_game.Service.Member.MemberServiceImpl;
+import com.inha.dice_game.constants.GameConstants;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +35,9 @@ public class SpringConfig {
     public Random randomGenerator(){return new Random();}
 
     @Bean
+    public GameConstants gameConstants(){return new GameConstants();}
+
+    @Bean
     public HashMap<String, WebSocketSession> GameRoomList() {return new HashMap<>();}
 
     @Bean
@@ -41,6 +47,9 @@ public class SpringConfig {
 
     @Bean
     public HashMap<String, GameDTOCollection.Progress> GameProgressList(){return new HashMap<>();}
+
+    @Bean
+    public InGameService inGameService(){return new InGameServiceImpl();}
 
     @Bean
     public BeanPostProcessor beanPostProcessor() {

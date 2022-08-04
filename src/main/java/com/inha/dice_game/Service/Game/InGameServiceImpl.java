@@ -92,6 +92,7 @@ public class InGameServiceImpl implements InGameService{
     @Override
     public void calcPickAvailability(GameDTOCollection.Progress progress) {
         ArrayList<Integer> Dices = progress.getTotalDices();
+        progress.initPickAvail();
 
         int one = 0;
         int two = 0;
@@ -155,8 +156,6 @@ public class InGameServiceImpl implements InGameService{
 
         int ownersTurn = progress.getIsOwnersTurn();
         int bonus = 0;
-        boolean bonusCalcNeeded = (progress.getPick().get(ownersTurn).get(6) == -1);
-
         for(int i = 0; i< 14;i++)
         {
             if(playerChosen.get(i))
@@ -170,11 +169,11 @@ public class InGameServiceImpl implements InGameService{
                         progress.setP1Sum(add + progress.getP1Sum());
                 }
             }
-            if(bonusCalcNeeded && i < 6)
+            if(i < 6)
                 bonus += progress.getPick().get(ownersTurn).get(i);
         }
         if(bonus > 62) {
-            progress.getPick().get(ownersTurn).set(7, 35);
+            progress.getPick().get(ownersTurn).set(6, 35);
             if (ownersTurn == 0) {
                 progress.setP2Sum(35 + progress.getP2Sum());
             } else {
@@ -198,7 +197,6 @@ public class InGameServiceImpl implements InGameService{
             progress.setTurn(progress.getTurn() + 1);
         }
         progress.setPhase(0);
-        progress.initPickAvail();
         progress.setDices(RollDices(new ArrayList<>(),5,progress.getRandom()));
         progress.setTotalDices(progress.getDices());
         calcPickAvailability(progress);

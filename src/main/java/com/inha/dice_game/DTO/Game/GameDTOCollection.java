@@ -89,6 +89,8 @@ public class GameDTOCollection {
             this.Pick = new ArrayList<>(2);
             this.Pick.add(new ArrayList<>(Collections.nCopies(14,-1)));
             this.Pick.add(new ArrayList<>(Collections.nCopies(14,-1)));
+            this.Pick.get(0).set(6,0);
+            this.Pick.get(1).set(6,0);
             this.p1Sum = 0;
             this.p2Sum = 0;
             this.random = new Random();

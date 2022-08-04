@@ -58,7 +58,7 @@ public class SpringConfig {
             public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
                 if (bean instanceof WebSocketMessageBrokerStats) {
                     WebSocketMessageBrokerStats webSocketMessageBrokerStats = (WebSocketMessageBrokerStats) bean;
-                    webSocketMessageBrokerStats.setLoggingPeriod(5 * 1000); // your customization
+                    webSocketMessageBrokerStats.setLoggingPeriod(50 * 1000); // your customization
                 }
                 return bean;
             }

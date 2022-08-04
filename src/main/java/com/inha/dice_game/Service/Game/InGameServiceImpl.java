@@ -29,6 +29,7 @@ public class InGameServiceImpl implements InGameService{
         progress.setDices(this.RollDices(new ArrayList<>(), 5,progress.getRandom()));
         progress.setTurn(progress.getTurn() + 1);
         progress.setIsOwnersTurn(progress.nextInt(2));
+        progress.setTotalDices(progress.getDices());
         calcPickAvailability(progress);
         gameProgressList.put(roomCode,progress);
         simpMessagingTemplate.convertAndSend("/sub/game/room/" + roomCode,progress);
@@ -53,7 +54,7 @@ public class InGameServiceImpl implements InGameService{
     public ArrayList<Integer> RollDices(ArrayList<Integer> original, int rollAmount, Random random) {
         for(int i = 0; i<rollAmount;i++)
         {
-            original.add(random.nextInt(5)+1);
+            original.add(random.nextInt(6)+1);
         }
         return original;
     }
@@ -61,16 +62,21 @@ public class InGameServiceImpl implements InGameService{
     @Override
     public void reRoll(GameDTOCollection.reRoll reRoll) {
         GameDTOCollection.Progress progress = gameProgressList.get(reRoll.getRoomCode());
-        reRoll.getKeep().addAll(RollDices(new ArrayList<>(), reRoll.getRollAmount(), progress.getRandom()));
-        progress.setDices(reRoll.getKeep());
+        progress.setKeptDices(reRoll.getKeep());
+        ArrayList<Integer> rollResult = RollDices(new ArrayList<>(), reRoll.getRollAmount(), progress.getRandom());
+        reRoll.getKeep().addAll(rollResult);
+        progress.setDices(rollResult);
+        progress.setTotalDices(reRoll.getKeep());
         calcPickAvailability(progress);
+        progress.setPhase(progress.getPhase() + 1);
+
         gameProgressList.replace(reRoll.getRoomCode(), progress);
         simpMessagingTemplate.convertAndSend("/sub/game/room/" + reRoll.getRoomCode(),progress);
     }
 
     @Override
     public void calcPickAvailability(GameDTOCollection.Progress progress) {
-        ArrayList<Integer> Dices = progress.getDices();
+        ArrayList<Integer> Dices = progress.getTotalDices();
 
         int one = 0;
         int two = 0;
@@ -95,66 +101,87 @@ public class InGameServiceImpl implements InGameService{
                 six++;
         }
 
-        int choice = one + two * 2 + three * 3 + four * 4 + five * 5 + six * 6 ;
+        int choice = one + two * 2 + three * 3 + four * 4 + five * 5 + six * 6;
         boolean doubled = (one == 2 || two == 2 || three == 2 || four == 2 || five == 2 || six == 2);
         boolean triple = (one == 3 || two == 3 || three == 3 || four == 3 || five == 3 || six == 3);
         boolean quadruple = (one == 4 || two == 4 || three == 4 || four == 4 || five == 4 || six == 4);
         boolean quintuple = (one == 5 || two == 5 || three == 5 || four == 5 || five == 5 || six == 5);
 
-        progress.getPickAvailability().replace("Choice", choice);
-        progress.getPickAvailability().replace("Ones",one);
-        progress.getPickAvailability().replace("Twos",two);
-        progress.getPickAvailability().replace("Threes",three);
-        progress.getPickAvailability().replace("Fours",four);
-        progress.getPickAvailability().replace("Fives",five);
-        progress.getPickAvailability().replace("Sixes",six);
+        progress.getPickAvailability().put("Choice", choice);
+        progress.getPickAvailability().put("Ones",one);
+        progress.getPickAvailability().put("Twos",two * 2);
+        progress.getPickAvailability().put("Threes",three * 3);
+        progress.getPickAvailability().put("Fours",four * 4);
+        progress.getPickAvailability().put("Fives",five * 5);
+        progress.getPickAvailability().put("Sixes",six * 6);
 
         if(one == 1 && two == 1 && three == 1 && four == 1 && five == 1)
-            progress.getPickAvailability().replace("S.Straight", 30);
+            progress.getPickAvailability().put("S.Straight", 30);
         if(two == 1 && three == 1 && four == 1 && five == 1 && six == 1)
-            progress.getPickAvailability().replace("L.Straight", 30);
+            progress.getPickAvailability().put("L.Straight", 30);
         if(quintuple)
-            progress.getPickAvailability().replace("Yacht", 50);
-        if(quadruple)
-            progress.getPickAvailability().replace("4 of a kind", choice);
-        if(triple)
-            progress.getPickAvailability().replace("3 of a kind",choice);
+            progress.getPickAvailability().put("Yacht", 50);
+        if(quadruple || quintuple)
+            progress.getPickAvailability().put("4 of a kind", choice);
+        if(triple || quadruple || quintuple)
+            progress.getPickAvailability().put("3 of a kind",choice);
         if(triple && doubled)
-            progress.getPickAvailability().replace("Full House",choice);
+            progress.getPickAvailability().put("Full House",choice);
+
+        progress.setPickAvailabilityScore(new ArrayList<>(progress.getPickAvailability().values()));
     }
 
     @Override
     public void pick(GameDTOCollection.picked picked) {
         GameDTOCollection.Progress progress = gameProgressList.get(picked.getRoomCode());
         ArrayList<Boolean> playerChosen = picked.getPicked();
-        int turn = progress.getIsOwnersTurn();
+
+        int ownersTurn = progress.getIsOwnersTurn();
         int bonus = 0;
-        int sum = 0;
+        boolean bonusCalcNeeded = (progress.getPick().get(ownersTurn).get(7) == -1);
+
         for(int i = 0; i< 14;i++)
         {
             if(playerChosen.get(i))
             {
-                if(progress.getPick().get(turn).get(i) == 0) {
+                if(progress.getPick().get(ownersTurn).get(i) == -1) {
                     int add = progress.getPickAvailability().get(gameConstants.getPicks().get(i));
-                    progress.getPick().get(turn).set(i, add);
-                    sum += add;
-                    if(turn == 0)
-                        progress.setP1Sum(sum);
+                    progress.getPick().get(ownersTurn).set(i, add);
+                    if(ownersTurn == 0)
+                        progress.setP2Sum(add + progress.getP2Sum());
                     else
-                        progress.setP2Sum(sum);
-                    if(i<7)
-                        bonus += add;
+                        progress.setP1Sum(add + progress.getP1Sum());
                 }
             }
+            if(bonusCalcNeeded && i < 7)
+                bonus += progress.getPick().get(ownersTurn).get(i);
         }
         if(bonus > 62)
-            progress.getPick().get(turn).set(7,bonus);
-        progress.setSum(sum);
-        progress.setTurn(turn == 0? 1: 0);
+            progress.getPick().get(ownersTurn).set(7,bonus);
+
+        endTurn(progress, picked.getRoomCode());
 
         gameProgressList.replace(picked.getRoomCode(), progress);
         simpMessagingTemplate.convertAndSend("/sub/game/room/" + picked.getRoomCode(),progress);
     }
+
+    @Override
+    public void endTurn(GameDTOCollection.Progress progress,String roomCode)
+    {
+        progress.setIsOwnersTurn(progress.getIsOwnersTurn() == 0? 1: 0);
+        progress.setPlayedClock(progress.getPlayedClock() + 1);
+        if(progress.getPlayedClock() % 2 == 0)
+        {
+            progress.setTurn(progress.getTurn() + 1);
+        }
+        progress.setPhase(0);
+        progress.initPickAvail();
+        progress.setDices(RollDices(new ArrayList<>(),5,progress.getRandom()));
+        progress.setTotalDices(progress.getDices());
+        calcPickAvailability(progress);
+        progress.setKeptDices(new ArrayList<>());
+    }
+
 }
 
 

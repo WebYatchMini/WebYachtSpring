@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Random;
+import java.util.*;
 
 public class GameDTOCollection {
 
@@ -62,31 +59,41 @@ public class GameDTOCollection {
         private int turn;
 
         private ArrayList<Integer> Dices;
+        private ArrayList<Integer> KeptDices;
+        @JsonIgnore
+        private ArrayList<Integer> TotalDices;
+        @JsonIgnore
         private LinkedHashMap<String,Integer> PickAvailability;
+
+        private ArrayList<Integer> PickAvailabilityScore;
         private ArrayList<ArrayList<Integer>> Pick;
-        @JsonIgnore
         private int p1Sum;
-        @JsonIgnore
         private int p2Sum;
         private int isOwnersTurn;
+        private int phase;
 
-        private int sum;
 
         @JsonIgnore
         private Random random;
+        @JsonIgnore
+        private int playedClock;
 
         public Progress()
         {
             this.turn = 0;
             this.Dices = new ArrayList<>(Arrays.asList(0,0,0,0,0));
+            this.TotalDices = new ArrayList<>();
+            this.KeptDices = new ArrayList<>();
             this.PickAvailability = new LinkedHashMap<>();
             initPickAvail();
             this.Pick = new ArrayList<>(2);
-            this.Pick.add(new ArrayList<>(14));
-            this.Pick.add(new ArrayList<>(14));
+            this.Pick.add(new ArrayList<>(Collections.nCopies(14,-1)));
+            this.Pick.add(new ArrayList<>(Collections.nCopies(14,-1)));
             this.p1Sum = 0;
             this.p2Sum = 0;
             this.random = new Random();
+            this.phase = 0;
+            this.playedClock = 0;
         }
 
         public void initPickAvail()

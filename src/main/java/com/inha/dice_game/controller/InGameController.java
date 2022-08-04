@@ -28,6 +28,7 @@ public class InGameController {
     @MessageMapping("/game/room/pick")
     public void pick(GameDTOCollection.picked picked)
     {
+        System.out.println("received pick");
         inGameService.pick(picked);
     }
 

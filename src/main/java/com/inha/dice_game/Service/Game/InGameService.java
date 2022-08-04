@@ -13,4 +13,5 @@ public interface InGameService {
     void reRoll(GameDTOCollection.reRoll reRoll);
     void calcPickAvailability(GameDTOCollection.Progress progress);
     void pick(GameDTOCollection.picked picked);
+    void endTurn(GameDTOCollection.Progress progress,String roomCode);
 }

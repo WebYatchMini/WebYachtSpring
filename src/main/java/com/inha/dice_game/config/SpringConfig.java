@@ -1,11 +1,13 @@
 package com.inha.dice_game.config;
 
-import com.inha.dice_game.DTO.ChatRoomDTO;
-import com.inha.dice_game.DTO.GameDTO;
+import com.inha.dice_game.DTO.Game.GameDTOCollection;
 import com.inha.dice_game.Service.Game.GameInfoService;
 import com.inha.dice_game.Service.Game.GameInfoServiceImpl;
+import com.inha.dice_game.Service.Game.InGameService;
+import com.inha.dice_game.Service.Game.InGameServiceImpl;
 import com.inha.dice_game.Service.Member.MemberService;
 import com.inha.dice_game.Service.Member.MemberServiceImpl;
+import com.inha.dice_game.constants.GameConstants;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
@@ -30,18 +32,24 @@ public class SpringConfig {
     public GameInfoService gameService(){return new GameInfoServiceImpl();}
 
     @Bean
-    public HashMap<String, ChatRoomDTO> chatRoomDTOHashMap() {return new HashMap<>();}
+    public Random randomGenerator(){return new Random();}
 
     @Bean
-    public Random randomGenerator(){return new Random();}
+    public GameConstants gameConstants(){return new GameConstants();}
 
     @Bean
     public HashMap<String, WebSocketSession> GameRoomList() {return new HashMap<>();}
 
     @Bean
-    public LinkedHashMap<String, GameDTO> GameInfoList(){
+    public LinkedHashMap<String, GameDTOCollection.Game> GameInfoList(){
         return new LinkedHashMap<>();
     }
+
+    @Bean
+    public HashMap<String, GameDTOCollection.Progress> GameProgressList(){return new HashMap<>();}
+
+    @Bean
+    public InGameService inGameService(){return new InGameServiceImpl();}
 
     @Bean
     public BeanPostProcessor beanPostProcessor() {
@@ -50,7 +58,7 @@ public class SpringConfig {
             public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
                 if (bean instanceof WebSocketMessageBrokerStats) {
                     WebSocketMessageBrokerStats webSocketMessageBrokerStats = (WebSocketMessageBrokerStats) bean;
-                    webSocketMessageBrokerStats.setLoggingPeriod(5 * 1000); // your customization
+                    webSocketMessageBrokerStats.setLoggingPeriod(50 * 1000); // your customization
                 }
                 return bean;
             }

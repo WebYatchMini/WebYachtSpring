@@ -1,12 +1,14 @@
 package com.inha.dice_game.controller;
 
 
-import com.inha.dice_game.DTO.*;
+import com.inha.dice_game.DTO.Game.GameDTOCollection;
+import com.inha.dice_game.DTO.Member.MemberDTOCollection;
 import com.inha.dice_game.Service.Game.GameInfoService;
 import com.inha.dice_game.constants.SessionConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ public class GameListController {
     }
 
     @GetMapping("/refresh")
-    public ArrayList<GameInfoVO> refresh()
+    public ArrayList<GameDTOCollection.Info> refresh()
     {
         return gameListService.fetchRooms();
     }
@@ -38,7 +40,7 @@ public class GameListController {
     }
 
     @PostMapping("/make")
-    public GameActionResultDTO make(@RequestBody GameDTO gameDTO, HttpServletRequest httpServletRequest)
+    public GameDTOCollection.ActionResult make(@RequestBody GameDTOCollection.Game gameDTO, HttpServletRequest httpServletRequest)
     {
         String encodedPW;
         if(gameDTO.getRoomPwd() != null)
@@ -47,20 +49,20 @@ public class GameListController {
             encodedPW = null;
         gameDTO.setRoomPwd(encodedPW);
         HttpSession session = httpServletRequest.getSession(false);
-        ProfileDTO temp = (ProfileDTO)session.getAttribute(SessionConstants.Login_member);
+        MemberDTOCollection.Profile temp = (MemberDTOCollection.Profile)session.getAttribute(SessionConstants.Login_member);
         gameDTO.setOrganizerName(temp.getNickname());
         return gameListService.makeNewRoom(gameDTO);
     }
 
     @PostMapping("/join")
-    public GameActionResultDTO join(@RequestBody GameJoinDTO gameJoinDTO)
+    public GameDTOCollection.ActionResult join(@RequestBody GameDTOCollection.Join gameJoinDTO)
     {
         return gameListService.joinRoom(gameJoinDTO);
     }
 
     @PostMapping("/exit")
-    public void exit(@RequestBody String roomCode)
+    public void exit(@RequestBody GameDTOCollection.Exit gameExitDTO)
     {
-        gameListService.exitRoom(roomCode);
+        gameListService.exitRoom(gameExitDTO);
     }
 }

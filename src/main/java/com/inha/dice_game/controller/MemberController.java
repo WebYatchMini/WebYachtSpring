@@ -1,8 +1,6 @@
 package com.inha.dice_game.controller;
 
-import com.inha.dice_game.DTO.LoginVO;
-import com.inha.dice_game.DTO.MemberVO;
-import com.inha.dice_game.DTO.ProfileDTO;
+import com.inha.dice_game.DTO.Member.MemberDTOCollection;
 import com.inha.dice_game.Service.Member.MemberService;
 import com.inha.dice_game.constants.SessionConstants;
 import com.inha.dice_game.entity.Member;
@@ -42,7 +40,7 @@ public class MemberController {
     }
 
     @PostMapping("/regist")
-    public boolean register(@RequestBody MemberVO memberVO) throws Exception {
+    public boolean register(@RequestBody MemberDTOCollection.MemberVO memberVO) throws Exception {
         String encodedPW = passwordEncoder.encode(memberVO.getPw());
         String encodedANS = passwordEncoder.encode(memberVO.getHint_answer());
         Member member = new Member(memberVO.getId(), memberVO.getHint(), encodedANS,encodedPW, memberVO.getNickname());
@@ -57,8 +55,8 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ProfileDTO login(@RequestBody LoginVO loginVO, BindingResult bindingResult, HttpServletRequest request) throws Exception {
-        ProfileDTO profileDTO = memberService.login(loginVO);
+    public MemberDTOCollection.Profile login(@RequestBody MemberDTOCollection.LoginVO loginVO, BindingResult bindingResult, HttpServletRequest request) throws Exception {
+        MemberDTOCollection.Profile profileDTO = memberService.login(loginVO);
 
         if(profileDTO == null)
             return null;

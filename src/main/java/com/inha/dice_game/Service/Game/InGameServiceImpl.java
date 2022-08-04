@@ -61,15 +61,30 @@ public class InGameServiceImpl implements InGameService{
 
     @Override
     public void reRoll(GameDTOCollection.reRoll reRoll) {
-        GameDTOCollection.Progress progress = gameProgressList.get(reRoll.getRoomCode());
-        progress.setKeptDices(reRoll.getKeep());
-        ArrayList<Integer> rollResult = RollDices(new ArrayList<>(), reRoll.getRollAmount(), progress.getRandom());
+        System.out.print("Printing received kept Dices: ");
+        for(Integer i : reRoll.getKeep())
+        {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+        GameDTOCollection.Progress progress = gameProgressList.get(reRoll.getRoomCode()); // 진행 정보 로드
+
+        progress.setKeptDices(new ArrayList<>(reRoll.getKeep()));// 클라이언트 저장한 주사위 저장
+
+        ArrayList<Integer> rollResult = RollDices(new ArrayList<>(), reRoll.getRollAmount(), progress.getRandom());//요청 갯수만큼 굴린 결과
+
+        progress.setDices(rollResult);// 보낼 결과 주사위(갯수만큼만)
         reRoll.getKeep().addAll(rollResult);
-        progress.setDices(rollResult);
-        progress.setTotalDices(reRoll.getKeep());
+        progress.setTotalDices(reRoll.getKeep()); // 저장한 주사위 + 굴린 주사위(족보판단용)
         calcPickAvailability(progress);
         progress.setPhase(progress.getPhase() + 1);
 
+        System.out.print("Printing kept Dices: ");
+        for(Integer i : progress.getKeptDices())
+        {
+            System.out.print(i + " ");
+        }
+        System.out.println();
         gameProgressList.replace(reRoll.getRoomCode(), progress);
         simpMessagingTemplate.convertAndSend("/sub/game/room/" + reRoll.getRoomCode(),progress);
     }
@@ -106,6 +121,8 @@ public class InGameServiceImpl implements InGameService{
         boolean triple = (one == 3 || two == 3 || three == 3 || four == 3 || five == 3 || six == 3);
         boolean quadruple = (one == 4 || two == 4 || three == 4 || four == 4 || five == 4 || six == 4);
         boolean quintuple = (one == 5 || two == 5 || three == 5 || four == 5 || five == 5 || six == 5);
+        boolean sStraight = ((one == 1 && two == 1 && three == 1 && four == 1) || (two == 1 && three == 1 && four == 1 && five == 1) || (three == 1 && four == 1 && five == 1 && six == 1));
+        boolean lStraight = ((one == 1 && two == 1 && three == 1 && four == 1 && five == 1) || (two == 1 && three == 1 && four == 1 && five == 1 && six == 1));
 
         progress.getPickAvailability().put("Choice", choice);
         progress.getPickAvailability().put("Ones",one);
@@ -115,9 +132,9 @@ public class InGameServiceImpl implements InGameService{
         progress.getPickAvailability().put("Fives",five * 5);
         progress.getPickAvailability().put("Sixes",six * 6);
 
-        if(one == 1 && two == 1 && three == 1 && four == 1 && five == 1)
-            progress.getPickAvailability().put("S.Straight", 30);
-        if(two == 1 && three == 1 && four == 1 && five == 1 && six == 1)
+        if(sStraight)
+            progress.getPickAvailability().put("S.Straight", 15);
+        if(lStraight)
             progress.getPickAvailability().put("L.Straight", 30);
         if(quintuple)
             progress.getPickAvailability().put("Yacht", 50);
@@ -138,7 +155,7 @@ public class InGameServiceImpl implements InGameService{
 
         int ownersTurn = progress.getIsOwnersTurn();
         int bonus = 0;
-        boolean bonusCalcNeeded = (progress.getPick().get(ownersTurn).get(7) == -1);
+        boolean bonusCalcNeeded = (progress.getPick().get(ownersTurn).get(6) == -1);
 
         for(int i = 0; i< 14;i++)
         {
@@ -153,11 +170,17 @@ public class InGameServiceImpl implements InGameService{
                         progress.setP1Sum(add + progress.getP1Sum());
                 }
             }
-            if(bonusCalcNeeded && i < 7)
+            if(bonusCalcNeeded && i < 6)
                 bonus += progress.getPick().get(ownersTurn).get(i);
         }
-        if(bonus > 62)
-            progress.getPick().get(ownersTurn).set(7,bonus);
+        if(bonus > 62) {
+            progress.getPick().get(ownersTurn).set(7, 35);
+            if (ownersTurn == 0) {
+                progress.setP2Sum(35 + progress.getP2Sum());
+            } else {
+                progress.setP1Sum(progress.getP1Sum() + 35);
+            }
+        }
 
         endTurn(progress, picked.getRoomCode());
 

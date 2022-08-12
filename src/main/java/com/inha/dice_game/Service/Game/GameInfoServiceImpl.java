@@ -7,12 +7,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Random;
 
 public class GameInfoServiceImpl implements GameInfoService {
 
@@ -20,13 +18,7 @@ public class GameInfoServiceImpl implements GameInfoService {
     LinkedHashMap<String, GameDTOCollection.Game> GameInfoList;
 
     @Autowired
-    HashMap<String, WebSocketSession> GameRoomList;
-
-    @Autowired
     PasswordEncoder passwordEncoder;
-
-    @Autowired
-    Random randomGenerator;
 
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
@@ -38,16 +30,8 @@ public class GameInfoServiceImpl implements GameInfoService {
     HashMap<String,GameDTOCollection.Progress> gameProgressList;
 
     @Override
-    public ArrayList<Integer> RollDice(ArrayList<Integer> dices, ArrayList<Integer> whichToRoll) {
-        for (Integer i : whichToRoll) {
-            dices.set(i,randomGenerator.nextInt(5) + 1);
-        }
-        return dices;
-    }
-
-    @Override
     public ArrayList<GameDTOCollection.Info> fetchRooms() {
-        ArrayList<GameDTOCollection.Info> returnArray = new ArrayList<>(GameInfoList.size());
+        ArrayList<GameDTOCollection.Info> returnArray = new ArrayList<>();
         for(GameDTOCollection.Game gameDTO : GameInfoList.values())
         {
             returnArray.add(gameDTO.extractInfo());
@@ -93,17 +77,16 @@ public class GameInfoServiceImpl implements GameInfoService {
         GameDTOCollection.ActionResult resultDTO = new GameDTOCollection.ActionResult();
 
 
-        if(temp == null || (temp.isLocked() && !passwordEncoder.matches(gameJoinDTO.getRoomPwd(),temp.getRoomPwd())|| temp.isFull()))
+        if(temp == null || (temp.isLocked() && !passwordEncoder.matches(gameJoinDTO.getRoomPwd(),temp.getRoomPwd())|| temp.isFull()))//없는 방이거나 비밀번호가 틀렸거나 꽉 찼거나
         {
             resultDTO.setResult(false);
             resultDTO.setRoomCode(null);
             return resultDTO;
         }
 
-        temp.putPlayer(gameJoinDTO.getUid());
+        temp.getPlayers().add(gameJoinDTO.getUid());
         temp.setCurPlayerCount(temp.getCurPlayerCount() + 1);
         temp.setFull(true);
-        GameInfoList.replace(gameJoinDTO.getRoomCode(),temp);
 
         resultDTO.setRoomCode(gameJoinDTO.getRoomCode());
         resultDTO.setResult(true);
@@ -133,9 +116,10 @@ public class GameInfoServiceImpl implements GameInfoService {
         System.out.println(gameExitDTO.getRoomCode());
         GameDTOCollection.Game temp = GameInfoList.get(gameExitDTO.getRoomCode());
         int playerCount = temp.getCurPlayerCount() - 1;
-        temp.removePlayer(gameExitDTO.getUid());
+        temp.getPlayers().remove(gameExitDTO.getUid());
         if(playerCount == 0)
         {
+            gameProgressList.remove(gameExitDTO.getRoomCode());
             GameInfoList.remove(gameExitDTO.getRoomCode());
         }
         else
@@ -144,10 +128,9 @@ public class GameInfoServiceImpl implements GameInfoService {
             temp.setFull(false);
             if(temp.getOrganizerUid().equals(gameExitDTO.getUid()))
             {
-                temp.setOrganizerUid(temp.getPlayerAtIndex(0));
+                temp.setOrganizerUid(temp.getPlayers().get(0));
                 temp.setOrganizerName(memberRepository.findByuid(temp.getOrganizerUid()).getNickname());
             }
-            GameInfoList.replace(gameExitDTO.getRoomCode(),temp);
             this.fetchPlayerData(gameExitDTO.getRoomCode());
         }
     }

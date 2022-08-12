@@ -234,6 +234,7 @@ public class InGameServiceImpl implements InGameService{
 
         winner.addWin();
         loser.addLose();
+        System.out.println("saving...");
         jpaMemberRepository.save(winner);
         jpaMemberRepository.save(loser);
     }

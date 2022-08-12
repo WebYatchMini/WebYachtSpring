@@ -6,7 +6,6 @@ import com.inha.dice_game.constants.GameConstants;
 import com.inha.dice_game.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -30,9 +29,6 @@ public class InGameServiceImpl implements InGameService{
 
     @Autowired
     JPAMemberRepository jpaMemberRepository;
-
-    @Autowired
-    PlatformTransactionManager platformTransactionManager;
 
     @Override
     public void Init(String roomCode) {

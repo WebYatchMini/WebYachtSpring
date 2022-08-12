@@ -22,7 +22,7 @@ public class InGameController {
     public void rerollDice(GameDTOCollection.reRoll reRoll)
     {
         System.out.println("received reroll");
-        inGameService.reRoll(reRoll);
+        inGameService.HandleReRoll(reRoll);
     }
 
     @MessageMapping("/game/room/pick")

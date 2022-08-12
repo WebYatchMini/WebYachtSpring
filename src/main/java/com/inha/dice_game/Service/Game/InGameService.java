@@ -9,9 +9,10 @@ public interface InGameService {
 
     void Init(String roomCode);
     long ConvertStringToLong(String stringToConvert);
-    ArrayList<Integer> RollDices(ArrayList<Integer> original, int rollAmount, Random random);
-    void reRoll(GameDTOCollection.reRoll reRoll);
+    ArrayList<Integer> RollDices(int rollAmount, Random random);
+    void HandleReRoll(GameDTOCollection.reRoll reRoll);
     void calcPickAvailability(GameDTOCollection.Progress progress);
     void pick(GameDTOCollection.picked picked);
     void endTurn(GameDTOCollection.Progress progress,String roomCode);
+    void endGame(GameDTOCollection.Progress progress,String roomCode);
 }

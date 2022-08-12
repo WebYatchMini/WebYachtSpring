@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public interface GameInfoService {
 
-    ArrayList<Integer> RollDice(ArrayList<Integer> dices, ArrayList<Integer> whichToRoll);
     ArrayList<GameDTOCollection.Info> fetchRooms();
     boolean deleteRoom(String roomCode);
     GameDTOCollection.ActionResult makeNewRoom(GameDTOCollection.Game gameDTO);

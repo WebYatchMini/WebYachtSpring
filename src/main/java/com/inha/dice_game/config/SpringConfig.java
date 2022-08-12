@@ -51,6 +51,8 @@ public class SpringConfig {
     @Bean
     public InGameService inGameService(){return new InGameServiceImpl();}
 
+
+
     @Bean
     public BeanPostProcessor beanPostProcessor() {
         return new BeanPostProcessor() {

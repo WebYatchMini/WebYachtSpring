@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,6 +24,16 @@ public class Member {
     private String nickname;
     private int Win;
     private int Lose;
+
+    public void addWin()
+    {
+        this.Win++;
+    }
+
+    public void addLose()
+    {
+        this.Lose++;
+    }
 
     @Override
     public String toString() {

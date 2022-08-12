@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Random;
 
 public class GameDTOCollection {
 
@@ -72,6 +75,9 @@ public class GameDTOCollection {
         private int isOwnersTurn;
         private int phase;
 
+        private int winner;
+
+        private boolean isEnded;
 
         @JsonIgnore
         private Random random;
@@ -80,8 +86,8 @@ public class GameDTOCollection {
 
         public Progress()
         {
-            this.turn = 0;
-            this.Dices = new ArrayList<>(Arrays.asList(0,0,0,0,0));
+            this.turn = 1;
+            this.Dices = new ArrayList<>();
             this.TotalDices = new ArrayList<>();
             this.KeptDices = new ArrayList<>();
             this.PickAvailability = new LinkedHashMap<>();
@@ -96,6 +102,8 @@ public class GameDTOCollection {
             this.random = new Random();
             this.phase = 0;
             this.playedClock = 0;
+            this.winner = -1;
+            this.isEnded = false;
         }
 
         public void initPickAvail()
@@ -115,19 +123,6 @@ public class GameDTOCollection {
             this.PickAvailability.put("L.Straight",0);
             this.PickAvailability.put("Yacht",0);
         }
-
-
-
-        public void setSeed(long seed)
-        {
-            this.random.setSeed(seed);
-        }
-
-        public Integer nextInt(Integer bound)
-        {
-            return random.nextInt(bound);
-        }
-
     }
 
     @Getter
@@ -172,20 +167,13 @@ public class GameDTOCollection {
         private ArrayList<String> players;
         private String organizerUid;
 
-        public void putPlayer(String puid)
+        public String notOrganizerFinder()
         {
-            players.add(puid);
+            ArrayList<String> temp = new ArrayList<>(players);
+            temp.remove(organizerUid);
+            return temp.get(0);
         }
 
-        public void removePlayer(String puid)
-        {
-            players.remove(puid);
-        }
-
-        public String getPlayerAtIndex(int i)
-        {
-            return players.get(i);
-        }
 
         public Game(String title, String roomPwd, String organizerName,String uid) {
             this.title = title;

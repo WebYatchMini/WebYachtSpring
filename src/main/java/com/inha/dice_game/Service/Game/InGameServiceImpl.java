@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Random;
+import java.util.*;
 
 public class InGameServiceImpl implements InGameService{
 
@@ -122,9 +119,9 @@ public class InGameServiceImpl implements InGameService{
         boolean triple = (one == 3 || two == 3 || three == 3 || four == 3 || five == 3 || six == 3);
         boolean quadruple = (one == 4 || two == 4 || three == 4 || four == 4 || five == 4 || six == 4);
         boolean quintuple = (one == 5 || two == 5 || three == 5 || four == 5 || five == 5 || six == 5);
-        boolean sStraight = ((one == 1 && two == 1 && three == 1 && four == 1) || (two == 1 && three == 1 && four == 1 && five == 1) || (three == 1 && four == 1 && five == 1 && six == 1));
-        //1234, 2345, 3456
-        boolean lStraight = ((one == 1 && two == 1 && three == 1 && four == 1 && five == 1) || (two == 1 && three == 1 && four == 1 && five == 1 && six == 1));
+        boolean sStraight = ((three >= 1 && four >= 1) && ((one >=1 && two >=1) || (two>=1 && five >= 1) || (five>=1 && six>=1)));
+        //1234, 2345, 3456 34는 필수!
+        boolean lStraight = ((two == 1 && three == 1 && four == 1) && ((one == 1 && five == 1) || (five == 1 && six == 1)));
         //12345, 23456
 
         progress.getPickAvailability().put("Choice", choice);
@@ -173,9 +170,26 @@ public class InGameServiceImpl implements InGameService{
                 }
             }
             if(i < 6)
-                bonus += progress.getPick().get(ownersTurn).get(i);
+                bonus += (progress.getPick().get(ownersTurn).get(i) == -1 ? 0 : progress.getPick().get(ownersTurn).get(i));
         }
-        if(bonus > 62) {
+        HandleBonus(progress,ownersTurn,bonus);
+        endTurn(progress, picked.getRoomCode());
+
+        simpMessagingTemplate.convertAndSend("/sub/game/room/" + picked.getRoomCode(),progress);
+    }
+
+    @Override
+    public void HandleBonus(GameDTOCollection.Progress progress, int ownersTurn, int bonus) {
+        if(ownersTurn == 0)
+        {
+            progress.setP2untilBonus(63 - bonus);
+        }
+        else
+        {
+            progress.setP1untilBonus(63 - bonus);
+        }
+
+        if(bonus > 62 && progress.getPick().get(ownersTurn).get(6) == 0) {
             progress.getPick().get(ownersTurn).set(6, 35);
             if (ownersTurn == 0) {
                 progress.setP2Sum(35 + progress.getP2Sum());
@@ -183,10 +197,6 @@ public class InGameServiceImpl implements InGameService{
                 progress.setP1Sum(progress.getP1Sum() + 35);
             }
         }
-
-        endTurn(progress, picked.getRoomCode());
-
-        simpMessagingTemplate.convertAndSend("/sub/game/room/" + picked.getRoomCode(),progress);
     }
 
     @Override
@@ -237,6 +247,27 @@ public class InGameServiceImpl implements InGameService{
         System.out.println("saving...");
         jpaMemberRepository.saveAndFlush(winner);
         jpaMemberRepository.saveAndFlush(loser);
+    }
+
+    @Override
+    public void timeout(GameDTOCollection.timeout timeout) {
+        GameDTOCollection.Progress progress = gameProgressList.get(timeout.getRoomCode());
+        ArrayList<Integer> yetNotPicked = new ArrayList<>();
+        for(int i =0 ; i < progress.getPickAvailabilityScore().size();i++)
+        {
+            if(i == 6)
+                continue;
+            if(progress.getPickAvailabilityScore().get(i) == 0)
+            {
+                yetNotPicked.add(i);
+            }
+        }
+        int randInt = progress.getRandom().nextInt(yetNotPicked.size());
+        GameDTOCollection.picked picked = new GameDTOCollection.picked();
+        picked.setRoomCode(timeout.getRoomCode());
+        picked.setPicked(new ArrayList<>(Collections.nCopies(14,false)));
+        picked.getPicked().set(randInt,true);
+        pick(picked);
     }
 
 }

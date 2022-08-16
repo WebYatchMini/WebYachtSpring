@@ -32,5 +32,11 @@ public class InGameController {
         inGameService.pick(picked);
     }
 
+    @MessageMapping("/game/room/timeout")
+    public void timeout(GameDTOCollection.timeout timeout)
+    {
+        System.out.println("received timeout");
+        inGameService.timeout(timeout);
+    }
 
 }

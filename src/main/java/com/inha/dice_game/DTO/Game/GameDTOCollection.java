@@ -1,6 +1,7 @@
 package com.inha.dice_game.DTO.Game;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.inha.dice_game.DTO.Chat.ChatDTOCollection;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,19 +14,17 @@ public class GameDTOCollection {
 
     @Getter
     @Setter
-    public static class Start
+    public static class Start extends ChatDTOCollection.Message
     {
-        private int sender;
         private int type;
-        private String message;
-        private String roomCode;
     }
+
+
 
     @Getter
     @Setter
-    public static class ActionResult {
+    public static class ActionResult extends ChatDTOCollection.Message{
         private boolean result;
-        private String roomCode;
     }
 
     @Getter
@@ -50,8 +49,7 @@ public class GameDTOCollection {
 
     @Getter
     @Setter
-    public static class Join {
-        private String roomCode;
+    public static class Join extends ChatDTOCollection.Message{
         private String roomPwd;
         private String uid;
     }
@@ -75,6 +73,9 @@ public class GameDTOCollection {
         private int isOwnersTurn;
         private int phase;
 
+        private int p1untilBonus;
+        private int p2untilBonus;
+
         private int winner;
 
         private boolean isEnded;
@@ -97,6 +98,8 @@ public class GameDTOCollection {
             this.Pick.add(new ArrayList<>(Collections.nCopies(14,-1)));
             this.Pick.get(0).set(6,0);
             this.Pick.get(1).set(6,0);
+            this.p1untilBonus = 63;
+            this.p2untilBonus = 63;
             this.p1Sum = 0;
             this.p2Sum = 0;
             this.random = new Random();
@@ -127,28 +130,24 @@ public class GameDTOCollection {
 
     @Getter
     @Setter
-    public static class picked
+    public static class picked extends ChatDTOCollection.Message
     {
-        private String roomCode;
         private ArrayList<Boolean> picked;
     }
 
     @Getter
     @Setter
-    public static class reRoll
+    public static class reRoll extends ChatDTOCollection.Message
     {
         private ArrayList<Integer> keep;
         private int rollAmount;
-        private String roomCode;
     }
 
     @Getter
     @Setter
-    public static class ReadyState {
+    public static class ReadyState extends ChatDTOCollection.Message{
         private int type;
         private boolean ready;
-        private int sender;
-        private String roomCode;
     }
 
 
@@ -198,8 +197,13 @@ public class GameDTOCollection {
 
     @Getter
     @Setter
-    public static class Exit{
-        private String roomCode;
+    public static class Exit extends ChatDTOCollection.Message{
         private String uid;
+    }
+
+    @Getter
+    @Setter
+    public static class timeout extends ChatDTOCollection.Message
+    {
     }
 }
